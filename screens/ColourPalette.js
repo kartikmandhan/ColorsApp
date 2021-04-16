@@ -13,7 +13,7 @@ const ColourPalette = (props) => {
       showsVerticalScrollIndicator={false}
       ListHeaderComponent={<Text style={styles.subHeading}>{paletteName}</Text>}
       renderItem={({ item }) => {
-        return <ColorBox color={item.colorName} hexValue={item.hexCode} />;
+        return <ColorBox colorName={item.colorName} hexCode={item.hexCode} />;
       }}
     />
   );

@@ -9,17 +9,18 @@ import {
   Text,
   View,
 } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
-const HomePage = ({ navigation }) => {
-  const [palette, setPalette] = useState([]);
+import AddNewPaletteModal from "../components/AddNewPaletteModal";
+const HomePage = ({ navigation, route }) => {
+  const [palettes, setPalettes] = useState([]);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
+
   const URL = "https://color-palette-api.kadikraman.now.sh/palettes";
   const handleFetchPalettes = async () => {
     const response = await fetch(URL);
     if (response.ok) {
       const palettes = await response.json();
-      setPalette(palettes);
+      setPalettes(palettes);
     }
   };
   useEffect(() => {
@@ -33,17 +34,13 @@ const HomePage = ({ navigation }) => {
   return (
     <View style={{ backgroundColor: "#fff" }}>
       <Modal visible={isModalVisible} animationType="slide">
-        <View style={styles.container}>
-          <View style={styles.topContainer}>
-            <MaterialIcons
-              name="close"
-              size={28}
-              onPress={() => {
-                setIsModalVisible(false);
-              }}
-            />
-          </View>
-        </View>
+        <AddNewPaletteModal
+          onPress={() => {
+            setIsModalVisible(false);
+          }}
+          navigation={navigation}
+          setPalettes={setPalettes}
+        />
       </Modal>
       <FlatList
         ListHeaderComponent={() => {
@@ -53,7 +50,7 @@ const HomePage = ({ navigation }) => {
             </TouchableOpacity>
           );
         }}
-        data={palette}
+        data={palettes}
         keyExtractor={(item) => item.paletteName}
         renderItem={({ item }) => (
           <PalettePreview
@@ -80,18 +77,5 @@ const styles = StyleSheet.create({
     padding: 20,
     borderBottomWidth: 1,
     borderColor: "#eee",
-  },
-  container: {
-    flex: 1,
-    paddingVertical: 8,
-  },
-  topContainer: {
-    height: "5%",
-    padding: 10,
-    borderBottomWidth: 1,
-    textAlignVertical: "center",
-    borderColor: "#eee",
-    justifyContent: "center",
-    alignItems: "flex-end",
   },
 });
